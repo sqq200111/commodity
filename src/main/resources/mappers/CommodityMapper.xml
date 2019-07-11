@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.commodity.mapper.CommodityMapper">
+    <resultMap id="commodityResultMap" type="com.example.commodity.domain.Commodity">
+        <result column="commodityId" property="commodityId" javaType="java.lang.Integer"/>
+        <result column="commodityName" property="commodityName" javaType="java.lang.String"/>
+        <result column="commodityPrice" property="commodityPrice" javaType="java.lang.Double"/>
+        <result column="commodityDescription" property="commodityDescription" javaType="java.lang.String"/>
+    </resultMap>
+
+
+    <select id="findCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(commodityid) from commodity
+        <where>
+            <if test="name= null">
+                 commodityName like concat('%' #{name} '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="find" resultMap="commodityResultMap">
+        select * from commodity
+        <where>
+            <if test="name != null">
+                commodityName like concat('%' #{name} '%')
+            </if>
+        </where>
+        limit ${(pagination.currentPageIndex - 1) * pagination.PAGESIZE},
+        #{pagination.PAGESIZE}
+    </select>
+
+
+
+</mapper>
